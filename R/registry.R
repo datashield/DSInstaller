@@ -64,8 +64,10 @@ read_registry <- function(path, label = path) {
   x <- tryCatch(jsonlite::fromJSON(path, simplifyVector = FALSE),
                 error = function(e) stop("Cannot read registry '", label, "': ",
                                          conditionMessage(e), call. = FALSE))
-  structure(validate_registry(x), class = "ds_registry")
+  revalidate(x)
 }
+
+revalidate <- function(x) structure(validate_registry(unclass(x)), class = "ds_registry")
 
 registry_source <- function() {
   src <- getOption("dsinstaller.registry")
@@ -109,8 +111,8 @@ validate_registry <- function(x) {
   if (length(dup)) fail("duplicated distribution name '", dup[1], "'")
   names(dists) <- dist_names
 
-  aliases <- x$aliases
-  if (is.null(aliases)) aliases <- list()
+  # as.list() also accepts the named character vector of a loaded registry
+  aliases <- as.list(x$aliases)
   if (!is.list(aliases) || (length(aliases) && is.null(names(aliases))))
     fail("'aliases' must be an object")
   for (a in names(aliases)) {
@@ -122,7 +124,10 @@ validate_registry <- function(x) {
   if ("stable" %in% names(aliases) && is.null(dists[[aliases[["stable"]]]]$repos))
     fail("distribution '", aliases[["stable"]], "' is the 'stable' target and must define 'repos'")
 
-  list(schema = x$schema, aliases = aliases, distributions = dists)
+  # other top-level fields, such as 'description', are kept
+  x$aliases <- aliases
+  x$distributions <- dists
+  x
 }
 
 validate_distribution <- function(d, fail) {

@@ -131,3 +131,19 @@ A package that a server doesn't report is `missing`: either it is not installed,
 - Package `source`: `cran` (the default, installed at exactly `version`), `github` (`repo` and `ref`) or `url` (a source tarball URL).
 
 The registry is validated when it is loaded, and errors name the distribution and package at fault. The full design is in [dev/PLAN.md](https://github.com/datashield/DSInstaller/blob/main/dev/PLAN.md).
+
+### Editing a registry
+
+Rather than editing the JSON by hand, load it, change it with the editing helpers and write it back. Every change is validated, so a mistake fails right away and the file is never left invalid:
+
+```r
+reg <- ds_registry("inst/extdata/registry.json")
+reg <- ds_set_distribution(reg, "2027.04", from = "testing", released = NULL,
+                           repos = "https://packagemanager.posit.co/cran/2027-04-01")
+reg <- ds_set_package(reg, "2027.04", "dsBase", "server", version = "6.5.0")
+reg <- ds_remove_package(reg, "2027.04", "DSMolgenisArmadillo")
+reg <- ds_set_alias(reg, "testing", "2027.04")
+ds_write_registry(reg, "inst/extdata/registry.json")
+```
+
+To check a registry file without changing it, load it with `ds_registry(path)`.
