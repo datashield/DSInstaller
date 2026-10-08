@@ -1,14 +1,3 @@
-# A library with fake installed packages, given as c(name = version).
-fake_lib <- function(versions) {
-  lib <- tempfile("lib")
-  for (p in names(versions)) {
-    dir.create(file.path(lib, p), recursive = TRUE)
-    writeLines(c(paste("Package:", p), paste("Version:", versions[[p]])),
-               file.path(lib, p, "DESCRIPTION"))
-  }
-  lib
-}
-
 test_that("ds_status reports ok, missing, outdated and newer packages", {
   reg <- load_registry(valid_registry())
   lib <- fake_lib(c(dsBase = "6.3.1", dsSurvival = "2.1.9"))

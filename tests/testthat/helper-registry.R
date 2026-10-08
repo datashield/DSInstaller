@@ -34,3 +34,14 @@ write_registry <- function(x) {
 }
 
 load_registry <- function(x) ds_registry(write_registry(x))
+
+# A library with fake installed packages, given as c(name = version).
+fake_lib <- function(versions) {
+  lib <- tempfile("lib")
+  for (p in names(versions)) {
+    dir.create(file.path(lib, p), recursive = TRUE)
+    writeLines(c(paste("Package:", p), paste("Version:", versions[[p]])),
+               file.path(lib, p, "DESCRIPTION"))
+  }
+  lib
+}

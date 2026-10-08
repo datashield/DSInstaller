@@ -154,6 +154,7 @@ Delete `R/hello.R`, `R/client.R` and `man/hello.Rd`.
 - `ds_install()`: computes the status, then installs the `missing`, `outdated` and `newer` packages. Pinning means downgrading a newer package too, and the dry run shows this.
 - Dependencies come from the distribution's `repos` snapshot unless the user overrides it with the `repos` argument. An override is reported in the output, since the environment is then no longer fully reproducible.
 - Checks the `r` constraint against `getRversion()` before installing anything.
+- Installs with `upgrade = "always"`, so that dependencies are aligned on the snapshot (or on current CRAN when `repos` is overridden). If `repos` has a more recent version of a pinned package, installing another package can upgrade it: the final check then reports it.
 - Ends with a `ds_status()` check and fails if anything is still not `ok`.
 - Server usage: the same function is called from a Rock image build or an R server session, e.g.
   `Rscript -e 'DSInstaller::ds_install("stable", side = "server", groups = "base")'`.
