@@ -16,3 +16,10 @@
   : Load a distributions registry
 - [`ds_status()`](https://datashield.github.io/DSInstaller/reference/ds_status.md)
   : Compare installed packages with a distribution
+- [`ds_set_distribution()`](https://datashield.github.io/DSInstaller/reference/registry-edit.md)
+  [`ds_remove_distribution()`](https://datashield.github.io/DSInstaller/reference/registry-edit.md)
+  [`ds_set_alias()`](https://datashield.github.io/DSInstaller/reference/registry-edit.md)
+  [`ds_set_package()`](https://datashield.github.io/DSInstaller/reference/registry-edit.md)
+  [`ds_remove_package()`](https://datashield.github.io/DSInstaller/reference/registry-edit.md)
+  [`ds_write_registry()`](https://datashield.github.io/DSInstaller/reference/registry-edit.md)
+  : Edit a distributions registry

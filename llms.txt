@@ -168,6 +168,26 @@ The registry is validated when it is loaded, and errors name the
 distribution and package at fault. The full design is in
 [dev/PLAN.md](https://github.com/datashield/DSInstaller/blob/main/dev/PLAN.md).
 
+### Editing a registry
+
+Rather than editing the JSON by hand, load it, change it with the
+editing helpers and write it back. Every change is validated, so a
+mistake fails right away and the file is never left invalid:
+
+``` r
+
+reg <- ds_registry("inst/extdata/registry.json")
+reg <- ds_set_distribution(reg, "2027.04", from = "testing", released = NULL,
+                           repos = "https://packagemanager.posit.co/cran/2027-04-01")
+reg <- ds_set_package(reg, "2027.04", "dsBase", "server", version = "6.5.0")
+reg <- ds_remove_package(reg, "2027.04", "DSMolgenisArmadillo")
+reg <- ds_set_alias(reg, "testing", "2027.04")
+ds_write_registry(reg, "inst/extdata/registry.json")
+```
+
+To check a registry file without changing it, load it with
+`ds_registry(path)`.
+
 # Package index
 
 ## All functions
@@ -186,4 +206,11 @@ distribution and package at fault. The full design is in
   : Load a distributions registry
 - [`ds_status()`](https://datashield.github.io/DSInstaller/reference/ds_status.md)
   : Compare installed packages with a distribution
+- [`ds_set_distribution()`](https://datashield.github.io/DSInstaller/reference/registry-edit.md)
+  [`ds_remove_distribution()`](https://datashield.github.io/DSInstaller/reference/registry-edit.md)
+  [`ds_set_alias()`](https://datashield.github.io/DSInstaller/reference/registry-edit.md)
+  [`ds_set_package()`](https://datashield.github.io/DSInstaller/reference/registry-edit.md)
+  [`ds_remove_package()`](https://datashield.github.io/DSInstaller/reference/registry-edit.md)
+  [`ds_write_registry()`](https://datashield.github.io/DSInstaller/reference/registry-edit.md)
+  : Edit a distributions registry
 

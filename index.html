@@ -160,6 +160,20 @@
 <li>Package <code>source</code>: <code>cran</code> (the default, installed at exactly <code>version</code>), <code>github</code> (<code>repo</code> and <code>ref</code>) or <code>url</code> (a source tarball URL).</li>
 </ul>
 <p>The registry is validated when it is loaded, and errors name the distribution and package at fault. The full design is in <a href="https://github.com/datashield/DSInstaller/blob/main/dev/PLAN.md" class="external-link">dev/PLAN.md</a>.</p>
+<div class="section level3">
+<h3 id="editing-a-registry">Editing a registry<a class="anchor" aria-label="anchor" href="#editing-a-registry"></a>
+</h3>
+<p>Rather than editing the JSON by hand, load it, change it with the editing helpers and write it back. Every change is validated, so a mistake fails right away and the file is never left invalid:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">reg</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ds_registry.html">ds_registry</a></span><span class="op">(</span><span class="st">"inst/extdata/registry.json"</span><span class="op">)</span></span>
+<span><span class="va">reg</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/registry-edit.html">ds_set_distribution</a></span><span class="op">(</span><span class="va">reg</span>, <span class="st">"2027.04"</span>, from <span class="op">=</span> <span class="st">"testing"</span>, released <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                           repos <span class="op">=</span> <span class="st">"https://packagemanager.posit.co/cran/2027-04-01"</span><span class="op">)</span></span>
+<span><span class="va">reg</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/registry-edit.html">ds_set_package</a></span><span class="op">(</span><span class="va">reg</span>, <span class="st">"2027.04"</span>, <span class="st">"dsBase"</span>, <span class="st">"server"</span>, version <span class="op">=</span> <span class="st">"6.5.0"</span><span class="op">)</span></span>
+<span><span class="va">reg</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/registry-edit.html">ds_remove_package</a></span><span class="op">(</span><span class="va">reg</span>, <span class="st">"2027.04"</span>, <span class="st">"DSMolgenisArmadillo"</span><span class="op">)</span></span>
+<span><span class="va">reg</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/registry-edit.html">ds_set_alias</a></span><span class="op">(</span><span class="va">reg</span>, <span class="st">"testing"</span>, <span class="st">"2027.04"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/registry-edit.html">ds_write_registry</a></span><span class="op">(</span><span class="va">reg</span>, <span class="st">"inst/extdata/registry.json"</span><span class="op">)</span></span></code></pre></div>
+<p>To check a registry file without changing it, load it with <code>ds_registry(path)</code>.</p>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

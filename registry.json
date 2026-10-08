@@ -14,21 +14,76 @@
       "r": ">= 4.3.0",
       "repos": "https://packagemanager.posit.co/cran/2026-04-01",
       "groups": {
-        "base": { "title": "Core DataSHIELD" },
-        "resources": { "title": "Resources" },
-        "survival": { "title": "Survival analysis", "requires": ["base"] }
+        "base": {
+          "title": "Core DataSHIELD"
+        },
+        "resources": {
+          "title": "Resources"
+        },
+        "survival": {
+          "title": "Survival analysis",
+          "requires": ["base"]
+        }
       },
       "packages": [
-        { "name": "dsBase", "version": "6.3.1", "side": "server", "groups": ["base"] },
-        { "name": "dsBaseClient", "version": "6.3.1", "side": "client", "groups": ["base"] },
-        { "name": "DSI", "version": "1.7.1", "side": "client", "groups": ["base"] },
-        { "name": "DSOpal", "version": "1.5.0", "side": "client", "groups": ["base"] },
-        { "name": "DSMolgenisArmadillo", "version": "2.0.9", "side": "client", "groups": ["base"] },
-        { "name": "resourcer", "version": "1.5.0", "side": "server", "groups": ["resources"] },
-        { "name": "dsSurvival", "version": "2.2.0", "side": "server", "groups": ["survival"],
-          "source": { "type": "github", "repo": "datashield/dsSurvival", "ref": "v2.2.0" } },
-        { "name": "dsSurvivalClient", "version": "2.2.0", "side": "client", "groups": ["survival"],
-          "source": { "type": "github", "repo": "datashield/dsSurvivalClient", "ref": "v2.2.0" } }
+        {
+          "name": "dsBase",
+          "version": "6.3.1",
+          "side": "server",
+          "groups": ["base"]
+        },
+        {
+          "name": "dsBaseClient",
+          "version": "6.3.1",
+          "side": "client",
+          "groups": ["base"]
+        },
+        {
+          "name": "DSI",
+          "version": "1.7.1",
+          "side": "client",
+          "groups": ["base"]
+        },
+        {
+          "name": "DSOpal",
+          "version": "1.5.0",
+          "side": "client",
+          "groups": ["base"]
+        },
+        {
+          "name": "DSMolgenisArmadillo",
+          "version": "2.0.9",
+          "side": "client",
+          "groups": ["base"]
+        },
+        {
+          "name": "resourcer",
+          "version": "1.5.0",
+          "side": "server",
+          "groups": ["resources"]
+        },
+        {
+          "name": "dsSurvival",
+          "version": "2.2.0",
+          "side": "server",
+          "groups": ["survival"],
+          "source": {
+            "type": "github",
+            "repo": "datashield/dsSurvival",
+            "ref": "v2.2.0"
+          }
+        },
+        {
+          "name": "dsSurvivalClient",
+          "version": "2.2.0",
+          "side": "client",
+          "groups": ["survival"],
+          "source": {
+            "type": "github",
+            "repo": "datashield/dsSurvivalClient",
+            "ref": "v2.2.0"
+          }
+        }
       ]
     },
     {
@@ -39,21 +94,76 @@
       "r": ">= 4.3.0",
       "repos": "https://packagemanager.posit.co/cran/2026-10-01",
       "groups": {
-        "base": { "title": "Core DataSHIELD" },
-        "resources": { "title": "Resources" },
-        "survival": { "title": "Survival analysis", "requires": ["base"] }
+        "base": {
+          "title": "Core DataSHIELD"
+        },
+        "resources": {
+          "title": "Resources"
+        },
+        "survival": {
+          "title": "Survival analysis",
+          "requires": ["base"]
+        }
       },
       "packages": [
-        { "name": "dsBase", "version": "6.4.0", "side": "server", "groups": ["base"] },
-        { "name": "dsBaseClient", "version": "6.4.0", "side": "client", "groups": ["base"] },
-        { "name": "DSI", "version": "1.8.0", "side": "client", "groups": ["base"] },
-        { "name": "DSOpal", "version": "1.6.0", "side": "client", "groups": ["base"] },
-        { "name": "DSMolgenisArmadillo", "version": "3.0.0", "side": "client", "groups": ["base"] },
-        { "name": "resourcer", "version": "1.6.0", "side": "server", "groups": ["resources"] },
-        { "name": "dsSurvival", "version": "2.3.0", "side": "server", "groups": ["survival"],
-          "source": { "type": "github", "repo": "datashield/dsSurvival", "ref": "v2.3.0" } },
-        { "name": "dsSurvivalClient", "version": "2.3.0", "side": "client", "groups": ["survival"],
-          "source": { "type": "github", "repo": "datashield/dsSurvivalClient", "ref": "v2.3.0" } }
+        {
+          "name": "dsBase",
+          "version": "6.4.0",
+          "side": "server",
+          "groups": ["base"]
+        },
+        {
+          "name": "dsBaseClient",
+          "version": "6.4.0",
+          "side": "client",
+          "groups": ["base"]
+        },
+        {
+          "name": "DSI",
+          "version": "1.8.0",
+          "side": "client",
+          "groups": ["base"]
+        },
+        {
+          "name": "DSOpal",
+          "version": "1.6.0",
+          "side": "client",
+          "groups": ["base"]
+        },
+        {
+          "name": "DSMolgenisArmadillo",
+          "version": "3.0.0",
+          "side": "client",
+          "groups": ["base"]
+        },
+        {
+          "name": "resourcer",
+          "version": "1.6.0",
+          "side": "server",
+          "groups": ["resources"]
+        },
+        {
+          "name": "dsSurvival",
+          "version": "2.3.0",
+          "side": "server",
+          "groups": ["survival"],
+          "source": {
+            "type": "github",
+            "repo": "datashield/dsSurvival",
+            "ref": "v2.3.0"
+          }
+        },
+        {
+          "name": "dsSurvivalClient",
+          "version": "2.3.0",
+          "side": "client",
+          "groups": ["survival"],
+          "source": {
+            "type": "github",
+            "repo": "datashield/dsSurvivalClient",
+            "ref": "v2.3.0"
+          }
+        }
       ]
     }
   ]
