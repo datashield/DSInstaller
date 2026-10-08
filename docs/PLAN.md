@@ -160,8 +160,8 @@ Delete `R/hello.R`, `R/client.R` and `man/hello.Rd`.
   `Rscript -e 'DSInstaller::ds_install("stable", side = "server", groups = "base")'`.
 
 ### 5. Online registry
-- `source` accepts a URL (download to `tempfile()`, then the same reader as for local files).
-- Cache the downloaded registry per session (or in `tools::R_user_dir("DSInstaller", "cache")`) and fall back to the cache when offline.
+- `source` accepts a URL (`http(s)://` or `file://`): download to `tempfile()`, then the same reader as for local files.
+- The downloaded registry is kept for the R session (`refresh = TRUE` downloads it again) and, once validated, copied to `tools::R_user_dir("DSInstaller", "cache")`. When the download fails, the cached copy is used with a warning. An invalid registry is an error and is not cached.
 - Host the canonical registry in a dedicated git repo (e.g. `datashield/distributions`). Changes go through pull requests, and CI validates them with `ds_registry()`.
 
 ### 6. Later, only on demand

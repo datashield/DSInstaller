@@ -4,10 +4,13 @@
 \alias{ds_registry}
 \title{Load a distributions registry}
 \usage{
-ds_registry(source = NULL)
+ds_registry(source = NULL, refresh = FALSE)
 }
 \arguments{
 \item{source}{Path or URL of the registry JSON document.}
+
+\item{refresh}{If `TRUE`, download the registry again even if it was already
+downloaded in this R session.}
 }
 \value{
 A validated registry, an object of class `ds_registry` with elements
@@ -23,6 +26,10 @@ When `source` is `NULL`, the registry location is taken from the
 `dsinstaller.registry` option, then from the `DSINSTALLER_REGISTRY`
 environment variable, and finally falls back to the example registry
 bundled with the package.
+
+A registry downloaded from a URL is kept for the rest of the R session, and
+a copy is saved in the user cache directory (see [tools::R_user_dir()]).
+When the download fails, that copy is used instead, with a warning.
 }
 \examples{
 reg <- ds_registry()

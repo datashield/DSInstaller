@@ -8,7 +8,13 @@
 #' environment variable, and finally falls back to the example registry
 #' bundled with the package.
 #'
+#' A registry downloaded from a URL is kept for the rest of the R session, and
+#' a copy is saved in the user cache directory (see [tools::R_user_dir()]).
+#' When the download fails, that copy is used instead, with a warning.
+#'
 #' @param source Path or URL of the registry JSON document.
+#' @param refresh If `TRUE`, download the registry again even if it was already
+#'   downloaded in this R session.
 #' @return A validated registry, an object of class `ds_registry` with elements
 #'   `schema`, `aliases` (named character vector) and `distributions` (list
 #'   named by distribution name).
@@ -16,12 +22,41 @@
 #' reg <- ds_registry()
 #' names(reg$distributions)
 #' @export
-ds_registry <- function(source = NULL) {
+ds_registry <- function(source = NULL, refresh = FALSE) {
   if (is.null(source)) source <- registry_source()
-  if (!grepl("^https?://", source) && !file.exists(source))
-    stop("Registry file not found: ", source, call. = FALSE)
-  x <- tryCatch(jsonlite::fromJSON(source, simplifyVector = FALSE),
-                error = function(e) stop("Cannot read registry '", source, "': ",
+  if (!grepl("^(https?|file)://", source)) return(read_registry(source))
+  if (!refresh && !is.null(session_registries[[source]])) return(session_registries[[source]])
+
+  cache <- file.path(tools::R_user_dir("DSInstaller", "cache"),
+                     paste0(gsub("[^A-Za-z0-9._-]", "_", source), ".json"))
+  tmp <- tempfile(fileext = ".json")
+  on.exit(unlink(tmp))
+  downloaded <- tryCatch({
+    utils::download.file(source, tmp, quiet = TRUE, mode = "wb")
+    TRUE
+  }, error = function(e) FALSE, warning = function(w) FALSE)
+  if (downloaded) {
+    # an invalid registry fails here and is not cached
+    reg <- read_registry(tmp, label = source)
+    dir.create(dirname(cache), recursive = TRUE, showWarnings = FALSE)
+    file.copy(tmp, cache, overwrite = TRUE)
+  } else if (file.exists(cache)) {
+    warning("Cannot download registry from ", source, ", using the copy cached on ",
+            format(file.mtime(cache)), call. = FALSE)
+    reg <- read_registry(cache, label = source)
+  } else {
+    stop("Cannot download registry from ", source, call. = FALSE)
+  }
+  session_registries[[source]] <- reg
+  reg
+}
+
+session_registries <- new.env()
+
+read_registry <- function(path, label = path) {
+  if (!file.exists(path)) stop("Registry file not found: ", path, call. = FALSE)
+  x <- tryCatch(jsonlite::fromJSON(path, simplifyVector = FALSE),
+                error = function(e) stop("Cannot read registry '", label, "': ",
                                          conditionMessage(e), call. = FALSE))
   structure(validate_registry(x), class = "ds_registry")
 }
