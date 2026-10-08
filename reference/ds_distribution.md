@@ -27,7 +27,6 @@ The distribution, an object of class \`ds_distribution\`.
 
 ``` r
 ds_distribution("stable")
-#> Warning: Cannot download registry from https://datashield.github.io/DSInstaller/registry.json, using the copy bundled with DSInstaller 0.1.0
 #> Distribution 2026.04 - DataSHIELD 2026.04 
 #>   Status:   stable 
 #>   Released: 2026-04-01 

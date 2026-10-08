@@ -3,6 +3,9 @@
 Reproducible DataSHIELD runtime environments, on both the server and the
 client.
 
+Website and function reference:
+<https://datashield.github.io/DSInstaller/>
+
 A **distribution** is a set of DataSHIELD packages, at pinned versions,
 that are known to work together. Distributions have unique, date-based
 names (`2026.04`, `2026.10`, …) and are never modified once released.
@@ -163,7 +166,7 @@ profile.
 
 The registry is validated when it is loaded, and errors name the
 distribution and package at fault. The full design is in
-[dev/PLAN.md](https://datashield.github.io/DSInstaller/dev/PLAN.md).
+[dev/PLAN.md](https://github.com/datashield/DSInstaller/blob/main/dev/PLAN.md).
 
 # Package index
 
