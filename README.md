@@ -2,6 +2,8 @@
 
 Reproducible DataSHIELD runtime environments, on both the server and the client.
 
+Website and function reference: <https://datashield.github.io/DSInstaller/>
+
 A **distribution** is a set of DataSHIELD packages, at pinned versions, that are known to work together. Distributions have unique, date-based names (`2026.04`, `2026.10`, …) and are never modified once released. Two aliases point to them and move over time, as in Debian:
 
 - `stable`: the conservative choice, validated, with dependencies pinned through a dated CRAN snapshot.
@@ -128,4 +130,4 @@ A package that a server doesn't report is `missing`: either it is not installed,
 - `repos`: a dated CRAN snapshot used for dependencies. It is required for the distribution that `stable` points to.
 - Package `source`: `cran` (the default, installed at exactly `version`), `github` (`repo` and `ref`) or `url` (a source tarball URL).
 
-The registry is validated when it is loaded, and errors name the distribution and package at fault. The full design is in [dev/PLAN.md](dev/PLAN.md).
+The registry is validated when it is loaded, and errors name the distribution and package at fault. The full design is in [dev/PLAN.md](https://github.com/datashield/DSInstaller/blob/main/dev/PLAN.md).
