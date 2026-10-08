@@ -24,12 +24,14 @@ or URL.
 \details{
 When `source` is `NULL`, the registry location is taken from the
 `dsinstaller.registry` option, then from the `DSINSTALLER_REGISTRY`
-environment variable, and finally falls back to the example registry
-bundled with the package.
+environment variable, and finally defaults to the registry published on the
+DSInstaller website.
 
 A registry downloaded from a URL is kept for the rest of the R session, and
 a copy is saved in the user cache directory (see [tools::R_user_dir()]).
-When the download fails, that copy is used instead, with a warning.
+When the download fails, that copy is used instead, with a warning. For the
+default registry, if there is no such copy either, the registry bundled with
+the package is used, also with a warning.
 }
 \examples{
 reg <- ds_registry()

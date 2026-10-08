@@ -8,7 +8,7 @@ test_that("default source follows option, then env var, then bundled file", {
   path <- write_registry(valid_registry())
   withr::local_options(dsinstaller.registry = NULL)
   withr::local_envvar(DSINSTALLER_REGISTRY = "")
-  expect_match(registry_source(), "extdata/registry.json$")
+  expect_equal(registry_source(), default_registry())
   withr::local_envvar(DSINSTALLER_REGISTRY = path)
   expect_equal(registry_source(), path)
   withr::local_options(dsinstaller.registry = "other.json")

@@ -12,6 +12,8 @@ Authors@R:
 Description: Installs 'DataSHIELD' profile environments, either for the server 
     or the client side.
 License: LGPL (>= 2.1)
+URL: https://datashield.github.io/DSInstaller/, https://github.com/datashield/DSInstaller
+BugReports: https://github.com/datashield/DSInstaller/issues
 Depends:
     R (>= 4.0.0)
 Encoding: UTF-8

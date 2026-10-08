@@ -18,14 +18,14 @@ remotes::install_github("datashield/DSInstaller")
 
 ## Registry
 
-Distributions are listed in a JSON registry. By default, DSInstaller uses the example registry it ships with. Its package versions are illustrative. To use another registry, set an option or an environment variable to a file path or URL:
+Distributions are listed in a JSON registry, maintained in this repository (`inst/extdata/registry.json`) and published with the package website at <https://datashield.github.io/DSInstaller/registry.json>. That's the registry DSInstaller uses by default. To use another registry, set an option or an environment variable to a file path or URL:
 
 ```r
 options(dsinstaller.registry = "https://example.org/datashield/registry.json")
 # or: Sys.setenv(DSINSTALLER_REGISTRY = "/path/to/registry.json")
 ```
 
-A downloaded registry is kept for the R session and cached on disk, so the cached copy is used when you are offline.
+A downloaded registry is kept for the R session and cached on disk, so the cached copy is used when you are offline. Without a cached copy, the registry bundled with the installed DSInstaller version is used.
 
 ```r
 library(DSInstaller)
@@ -128,4 +128,4 @@ A package that a server doesn't report is `missing`: either it is not installed,
 - `repos`: a dated CRAN snapshot used for dependencies. It is required for the distribution that `stable` points to.
 - Package `source`: `cran` (the default, installed at exactly `version`), `github` (`repo` and `ref`) or `url` (a source tarball URL).
 
-The registry is validated when it is loaded, and errors name the distribution and package at fault. The full design is in [docs/PLAN.md](docs/PLAN.md).
+The registry is validated when it is loaded, and errors name the distribution and package at fault. The full design is in [dev/PLAN.md](dev/PLAN.md).

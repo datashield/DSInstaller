@@ -5,12 +5,14 @@
 #'
 #' When `source` is `NULL`, the registry location is taken from the
 #' `dsinstaller.registry` option, then from the `DSINSTALLER_REGISTRY`
-#' environment variable, and finally falls back to the example registry
-#' bundled with the package.
+#' environment variable, and finally defaults to the registry published on the
+#' DSInstaller website.
 #'
 #' A registry downloaded from a URL is kept for the rest of the R session, and
 #' a copy is saved in the user cache directory (see [tools::R_user_dir()]).
-#' When the download fails, that copy is used instead, with a warning.
+#' When the download fails, that copy is used instead, with a warning. For the
+#' default registry, if there is no such copy either, the registry bundled with
+#' the package is used, also with a warning.
 #'
 #' @param source Path or URL of the registry JSON document.
 #' @param refresh If `TRUE`, download the registry again even if it was already
@@ -44,6 +46,10 @@ ds_registry <- function(source = NULL, refresh = FALSE) {
     warning("Cannot download registry from ", source, ", using the copy cached on ",
             format(file.mtime(cache)), call. = FALSE)
     reg <- read_registry(cache, label = source)
+  } else if (identical(source, default_registry())) {
+    warning("Cannot download registry from ", source, ", using the copy bundled with DSInstaller ",
+            utils::packageVersion("DSInstaller"), call. = FALSE)
+    reg <- read_registry(system.file("extdata", "registry.json", package = "DSInstaller"))
   } else {
     stop("Cannot download registry from ", source, call. = FALSE)
   }
@@ -64,9 +70,12 @@ read_registry <- function(path, label = path) {
 registry_source <- function() {
   src <- getOption("dsinstaller.registry")
   if (is.null(src)) src <- Sys.getenv("DSINSTALLER_REGISTRY")
-  if (!nzchar(src)) src <- system.file("extdata", "registry.json", package = "DSInstaller")
+  if (!nzchar(src)) src <- default_registry()
   src
 }
+
+# The registry published with the package website, see .github/workflows/pkgdown.yaml.
+default_registry <- function() "https://datashield.github.io/DSInstaller/registry.json"
 
 # Resolve an alias or distribution name to the distribution object.
 resolve_distribution <- function(registry, name) {

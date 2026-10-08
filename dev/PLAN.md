@@ -106,7 +106,7 @@ ds_install(dist = "stable", side = "client", groups = NULL,
            dry_run = FALSE)  # installs only what is not "ok", returns ds_status() invisibly
 ```
 
-Default registry resolution: the `dsinstaller.registry` option, then the `DSINSTALLER_REGISTRY` environment variable, then the example registry bundled in `inst/extdata/registry.json`. Once a canonical online URL exists, it replaces the bundled file as the final fallback.
+Default registry resolution: the `dsinstaller.registry` option, then the `DSINSTALLER_REGISTRY` environment variable, then the registry published on the package website (`https://datashield.github.io/DSInstaller/registry.json`). If that download fails, the cached copy is used, and without one, the registry bundled in `inst/extdata/registry.json`, with a warning.
 
 `groups = NULL` means all groups. Requested groups are expanded with their `requires` closure.
 
@@ -162,7 +162,7 @@ Delete `R/hello.R`, `R/client.R` and `man/hello.Rd`.
 ### 5. Online registry
 - `source` accepts a URL (`http(s)://` or `file://`): download to `tempfile()`, then the same reader as for local files.
 - The downloaded registry is kept for the R session (`refresh = TRUE` downloads it again) and, once validated, copied to `tools::R_user_dir("DSInstaller", "cache")`. When the download fails, the cached copy is used with a warning. An invalid registry is an error and is not cached.
-- Host the canonical registry in a dedicated git repo (e.g. `datashield/distributions`). Changes go through pull requests, and CI validates them with `ds_registry()`.
+- The canonical registry is `inst/extdata/registry.json` in this repository. The pkgdown workflow (`.github/workflows/pkgdown.yaml`) validates it with `ds_registry()` and copies it into the site, served by GitHub Pages at `https://datashield.github.io/DSInstaller/registry.json`. Changes go through pull requests, where the package tests validate it too. Each package release also ships the registry of its time, as a last-resort fallback.
 
 ### 6. Later, only on demand
 - **Server conformance check from the client** (done): `ds_check_servers(conns, dist, groups)` compares the versions reported by `DSI::datashield.pkg_status()` with the distribution's `server` packages, per server. A package not reported by a server is `missing`: not installed, or its methods are not enabled in the server profile.

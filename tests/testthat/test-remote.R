@@ -42,3 +42,12 @@ test_that("an invalid remote registry is not cached", {
   expect_error(ds_registry(url), "unsupported schema")
   expect_length(list.files(tools::R_user_dir("DSInstaller", "cache")), 0)
 })
+
+test_that("the default registry falls back to the bundled copy", {
+  url <- local_remote(valid_registry())
+  unlink(sub("^file://", "", url))
+  local_mocked_bindings(default_registry = function() url)
+  expect_warning(reg <- ds_registry(url), "using the copy bundled")
+  bundled <- read_registry(system.file("extdata", "registry.json", package = "DSInstaller"))
+  expect_equal(reg, bundled)
+})
