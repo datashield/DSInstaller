@@ -98,7 +98,7 @@ ds_packages(dist = "stable", side = c("client", "server"),
 
 # Local state
 ds_status(dist = "stable", side = "client", groups = NULL,
-          lib = .libPaths()[1])  # data.frame: package, expected, installed, state (ok/missing/outdated/newer)
+          lib = .libPaths())     # data.frame: package, expected, installed, state (ok/missing/outdated/newer)
 
 # Installation
 ds_install(dist = "stable", side = "client", groups = NULL,
@@ -147,7 +147,7 @@ Delete `R/hello.R`, `R/client.R` and `man/hello.Rd`.
 - Tests: group closure, side filtering.
 
 ### 3. Status
-- `ds_status()` compares the installed versions in `lib` with the distribution.
+- `ds_status()` compares the installed versions in `lib` with the distribution. As with `library()`, the first library where a package is found counts, so `lib` defaults to all of `.libPaths()`. It returns the `ds_packages()` data.frame plus `installed` and `state`, so `ds_install()` can work from it directly.
 - Tests: use a temporary library with fake `DESCRIPTION` files, so nothing is installed.
 
 ### 4. Install
