@@ -1,0 +1,23 @@
+Package: DSInstaller
+Type: Package
+Title: 'DataSHIELD' Environment Installer
+Version: 0.1.0
+Authors@R: 
+    c(person(given = "Yannick",
+             family = "Marcon",
+             role = c("aut", "cre"),
+             email = "yannick.marcon@obiba.org",
+             comment = c(ORCID = "0000-0003-0138-2023"))
+      )
+Description: Installs 'DataSHIELD' profile environments, either for the server 
+    or the client side.
+License: LGPL (>= 2.1)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.3
+Imports:
+    jsonlite
+Suggests:
+    testthat (>= 3.0.0),
+    withr
+Config/testthat/edition: 3

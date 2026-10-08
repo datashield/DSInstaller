@@ -1,0 +1,17 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.travis\.yml$
+^cran-comments\.md$
+^revdep$
+^codecov\.yml$
+\.o$
+\.so$
+\.dll$
+^logo\.png$
+^_pkgdown\.yml$
+^docs$
+^appveyor\.yml$
+^LICENSE\.md$
+^pkgdown$
+^CRAN-SUBMISSION$
+^\.github$
