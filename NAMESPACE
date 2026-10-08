@@ -2,6 +2,7 @@
 
 S3method(print,ds_distribution)
 S3method(print,ds_registry)
+export(ds_check_servers)
 export(ds_distribution)
 export(ds_distributions)
 export(ds_install)

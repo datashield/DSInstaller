@@ -16,13 +16,18 @@ ds_status <- function(dist = "stable", side = "client", groups = NULL, lib = .li
   pkgs$installed <- vapply(pkgs$name, function(p)
     as.character(suppressWarnings(utils::packageDescription(p, lib.loc = lib, fields = "Version"))),
     "", USE.NAMES = FALSE)
-  pkgs$state <- vapply(seq_len(nrow(pkgs)), function(i) {
-    if (is.na(pkgs$installed[i])) return("missing")
-    installed <- package_version(pkgs$installed[i])
-    expected <- package_version(pkgs$version[i])
-    if (installed == expected) "ok" else if (installed < expected) "outdated" else "newer"
-  }, "")
+  pkgs$state <- version_state(pkgs$installed, pkgs$version)
   pkgs
+}
+
+# Compare installed versions (NA when not installed) with expected ones.
+version_state <- function(installed, expected) {
+  vapply(seq_along(installed), function(i) {
+    if (is.na(installed[i])) return("missing")
+    inst <- package_version(installed[i])
+    exp <- package_version(expected[i])
+    if (inst == exp) "ok" else if (inst < exp) "outdated" else "newer"
+  }, "")
 }
 
 #' Install a distribution

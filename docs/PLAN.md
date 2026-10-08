@@ -165,7 +165,7 @@ Delete `R/hello.R`, `R/client.R` and `man/hello.Rd`.
 - Host the canonical registry in a dedicated git repo (e.g. `datashield/distributions`). Changes go through pull requests, and CI validates them with `ds_registry()`.
 
 ### 6. Later, only on demand
-- **Server conformance check from the client**: use `DSI::datashield.pkg_status()` on the connections and compare the versions with the distribution's `server` packages, to tell the analyst whether the servers match their client distribution.
+- **Server conformance check from the client** (done): `ds_check_servers(conns, dist, groups)` compares the versions reported by `DSI::datashield.pkg_status()` with the distribution's `server` packages, per server. A package not reported by a server is `missing`: not installed, or its methods are not enabled in the server profile.
 - Export a distribution as an `renv.lock` or a Dockerfile snippet.
 - Signed/checksummed registry.
 
