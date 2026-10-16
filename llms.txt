@@ -23,6 +23,9 @@ need. A group can require other groups, which are then included too.
 
 ``` r
 
+# install.packages("pak")
+pak::pkg_install("datashield/DSInstaller")
+# or
 # install.packages("remotes")
 remotes::install_github("datashield/DSInstaller")
 ```
