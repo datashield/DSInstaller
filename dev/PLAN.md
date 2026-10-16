@@ -115,7 +115,7 @@ In `ds_install()`, `repos = NULL` uses the distribution's CRAN snapshot (or `get
 ## Dependencies
 
 - `jsonlite` (Imports): reads the registry.
-- `remotes` (Imports): `install_version()` for CRAN, `install_github()`, `install_url()`. `pak` would be faster, but it is a heavier dependency. Reconsider if install speed becomes an issue.
+- `pak` (Imports): installs all packages in a single solve (`name@version` for CRAN, `repo@ref` for github, `url::` for url), so that conflicting pins fail before anything is installed. It also gets Linux binaries from P3M snapshots (the platform specific URL is added next to the snapshot one, which pak needs to find archived versions) and can install system requirements (`PKG_SYSREQS=true`), which matters for server Docker images.
 - `testthat` (Suggests).
 
 Everything else uses base R and `utils` (`packageVersion`, `installed.packages`, `compareVersion`).
@@ -154,7 +154,7 @@ Delete `R/hello.R`, `R/client.R` and `man/hello.Rd`.
 - `ds_install()`: computes the status, then installs the `missing`, `outdated` and `newer` packages. Pinning means downgrading a newer package too, and the dry run shows this.
 - Dependencies come from the distribution's `repos` snapshot unless the user overrides it with the `repos` argument. An override is reported in the output, since the environment is then no longer fully reproducible.
 - Checks the `r` constraint against `getRversion()` before installing anything.
-- Installs with `upgrade = "always"`, so that dependencies are aligned on the snapshot (or on current CRAN when `repos` is overridden). If `repos` has a more recent version of a pinned package, installing another package can upgrade it: the final check then reports it.
+- Installs with `upgrade = TRUE`, so that dependencies are aligned on the snapshot (or on current CRAN when `repos` is overridden). All packages go through one pak solve, so a pin that conflicts with another package's requirements fails before anything is installed.
 - Ends with a `ds_status()` check and fails if anything is still not `ok`.
 - Server usage: the same function is called from a Rock image build or an R server session, e.g.
   `Rscript -e 'DSInstaller::ds_install("stable", side = "server", groups = "base")'`.

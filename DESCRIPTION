@@ -21,7 +21,7 @@ LazyData: true
 RoxygenNote: 7.3.3
 Imports:
     jsonlite,
-    remotes
+    pak
 Suggests:
     DSI,
     DSLite,

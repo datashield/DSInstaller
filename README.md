@@ -14,6 +14,9 @@ A distribution is split into **groups** (`base`, `resources`, `survival`, …), 
 ## Installation
 
 ```r
+# install.packages("pak")
+pak::pkg_install("datashield/DSInstaller")
+# or
 # install.packages("remotes")
 remotes::install_github("datashield/DSInstaller")
 ```

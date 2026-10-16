@@ -76,9 +76,9 @@ ds_install <- function(dist = "stable", side = "client", groups = NULL, lib = .l
     pkg <- todo[i, ]
     message(if (dry_run) "Would install " else "Installing ", pkg$name, " ", pkg$version,
             if (is.na(pkg$installed)) "" else paste0(" (", pkg$state, ": ", pkg$installed, ")"))
-    if (!dry_run) install_package(pkg, lib = lib, repos = repos)
   }
   if (dry_run) return(invisible(status))
+  install_packages(todo, lib = lib, repos = repos)
 
   status <- ds_status(dist, side = side, groups = groups, lib = lib)
   bad <- status[status$state != "ok", ]
@@ -88,18 +88,33 @@ ds_install <- function(dist = "stable", side = "client", groups = NULL, lib = .l
   invisible(status)
 }
 
-# Install one row of ds_packages(). Dependencies are upgraded to the version
-# available in repos, which aligns them on the distribution snapshot. This can
-# also move a pinned package installed earlier, if repos has a more recent
-# version of it: ds_install() then fails on its final check.
-install_package <- function(pkg, lib, repos) {
-  switch(pkg$source,
-         cran = remotes::install_version(pkg$name, pkg$version, repos = repos, lib = lib,
-                                         upgrade = "always", force = TRUE),
-         github = remotes::install_github(pkg$remote, repos = repos, lib = lib,
-                                          upgrade = "always", force = TRUE),
-         url = remotes::install_url(pkg$remote, repos = repos, lib = lib,
-                                    upgrade = "always", force = TRUE))
+# Install rows of ds_packages() with pak, in a single solve: conflicting pins
+# fail before anything is installed. Dependencies are upgraded to the version
+# available in repos, which aligns them on the distribution snapshot.
+install_packages <- function(pkgs, lib, repos) {
+  # an unnamed repos would make pak add its default CRAN mirror next to it
+  if (is.null(names(repos))) names(repos) <- c("CRAN", rep("", length(repos) - 1))
+  bin <- setdiff(vapply(repos, p3m_binary_url, ""), repos)
+  if (length(bin)) repos <- c(repos, stats::setNames(bin, paste0("P3M", seq_along(bin))))
+  old <- options(repos = repos)
+  on.exit(options(old))
+  pak::pkg_install(package_refs(pkgs), lib = lib, upgrade = TRUE, ask = FALSE)
+}
+
+# pak only gets Linux binaries from a P3M snapshot when given its platform
+# specific URL, which repo_resolve() builds (other platforms get the URL as is).
+# It is added next to the snapshot URL, not in place of it: with the binary URL
+# only, pak silently ignores pins on archived versions.
+p3m_binary_url <- function(url) {
+  pattern <- "^https://packagemanager\\.posit\\.co/cran/(\\d{4}-\\d{2}-\\d{2})/?$"
+  if (!grepl(pattern, url)) return(url)
+  unname(pak::repo_resolve(paste0("PPM@", sub(pattern, "\\1", url))))
+}
+
+# pak package references of rows of ds_packages().
+package_refs <- function(pkgs) {
+  ifelse(pkgs$source == "cran", paste0(pkgs$name, "@", pkgs$version),
+         ifelse(pkgs$source == "url", paste0("url::", pkgs$remote), pkgs$remote))
 }
 
 # Check an R version constraint such as ">= 4.3.0".

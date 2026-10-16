@@ -1,17 +1,20 @@
-# Replace install_package() with a fake that writes a DESCRIPTION file in lib.
+# Replace install_packages() with a fake that writes DESCRIPTION files in lib.
 # `versions` can force the installed version of a package (to simulate a bad
 # install). Returns an environment recording calls.
 mock_install <- function(versions = character(), env = parent.frame()) {
   calls <- new.env()
   calls$pkgs <- character()
   calls$repos <- NULL
-  local_mocked_bindings(install_package = function(pkg, lib, repos) {
-    calls$pkgs <- c(calls$pkgs, pkg$name)
+  local_mocked_bindings(install_packages = function(pkgs, lib, repos) {
+    calls$pkgs <- c(calls$pkgs, pkgs$name)
     calls$repos <- repos
-    version <- if (pkg$name %in% names(versions)) versions[[pkg$name]] else pkg$version
-    dir.create(file.path(lib, pkg$name), recursive = TRUE, showWarnings = FALSE)
-    writeLines(c(paste("Package:", pkg$name), paste("Version:", version)),
-               file.path(lib, pkg$name, "DESCRIPTION"))
+    for (i in seq_len(nrow(pkgs))) {
+      name <- pkgs$name[i]
+      version <- if (name %in% names(versions)) versions[[name]] else pkgs$version[i]
+      dir.create(file.path(lib, name), recursive = TRUE, showWarnings = FALSE)
+      writeLines(c(paste("Package:", name), paste("Version:", version)),
+                 file.path(lib, name, "DESCRIPTION"))
+    }
   }, .env = env)
   calls
 }
@@ -81,22 +84,29 @@ test_that("check_r_version evaluates constraints", {
   expect_false(check_r_version(">4.4.2", "4.4.2"))
 })
 
-test_that("install_package dispatches on the source type", {
-  calls <- list()
-  record <- function(name) function(...) calls[[name]] <<- list(...)
-  local_mocked_bindings(install_version = record("cran"), install_github = record("github"),
-                        install_url = record("url"), .package = "remotes")
+test_that("install_packages calls pak once with all references", {
+  call <- NULL
+  local_mocked_bindings(pkg_install = function(...) call <<- list(..., repos = getOption("repos")),
+                        .package = "pak")
   pkgs <- packages_df(list(
     list(name = "a", version = "1.0", side = "client", groups = "g", source = list(type = "cran")),
     list(name = "b", version = "1.0", side = "client", groups = "g",
          source = list(type = "github", repo = "org/b", ref = "v1.0")),
     list(name = "c", version = "1.0", side = "client", groups = "g",
          source = list(type = "url", url = "https://example.org/c_1.0.tar.gz"))))
-  for (i in 1:3) install_package(pkgs[i, ], lib = "L", repos = "R")
-  expect_equal(unname(calls$cran[1:2]), list("a", "1.0"))
-  expect_equal(calls$github[[1]], "org/b@v1.0")
-  expect_equal(calls$url[[1]], "https://example.org/c_1.0.tar.gz")
-  expect_equal(calls$cran$lib, "L")
-  expect_equal(calls$github$repos, "R")
-  expect_equal(calls$url$upgrade, "always")
+  install_packages(pkgs, lib = "L", repos = "R")
+  expect_equal(call[[1]], c("a@1.0", "org/b@v1.0", "url::https://example.org/c_1.0.tar.gz"))
+  expect_equal(call$lib, "L")
+  expect_true(call$upgrade)
+  expect_equal(call$repos, c(CRAN = "R"))
+  expect_false(identical(getOption("repos"), c(CRAN = "R")))
+  local_mocked_bindings(repo_resolve = function(x) c(CRAN = "BIN"), .package = "pak")
+  install_packages(pkgs, lib = "L", repos = "https://packagemanager.posit.co/cran/2026-04-01")
+  expect_equal(call$repos, c(CRAN = "https://packagemanager.posit.co/cran/2026-04-01", P3M1 = "BIN"))
+})
+
+test_that("p3m_binary_url resolves P3M snapshots only", {
+  local_mocked_bindings(repo_resolve = function(x) c(CRAN = paste0("resolved:", x)), .package = "pak")
+  expect_equal(p3m_binary_url("https://packagemanager.posit.co/cran/2026-04-01"), "resolved:PPM@2026-04-01")
+  expect_equal(p3m_binary_url("https://cloud.r-project.org"), "https://cloud.r-project.org")
 })
